@@ -13,14 +13,25 @@ list_2 = [make_tuple(items.strip()) for items in list_str]
 print(list_2)
 
 
-
-
 '''
+form_list = pd.Dataframe()
+
+
+class Mouse:
+    def __init__(self, mouse_number, weight, diff_d1_v):
+        self.mouse_number = mouse_number
+        self.weight = weight
+        self.diff_d1_v = diff_d1_v
+        
+
+
+
+
 for final, initial in list_2:
     diff_list.append(final - initial)
 
 print(diff_list)
- '''
+'''
 
 
 
