@@ -1,51 +1,51 @@
-import pandas as pd
-import openpyxl
-from openpyxl import Workbook
-from openpyxl import load_workbook
+# import pandas as pd
+# import openpyxl
+# from openpyxl import Workbook
+# from openpyxl import load_workbook
 
-df = pd.read_excel('/Users/cmason/Library/Containers/com.microsoft.Excel/Data/Downloads/did_test3.xlsx')
-wb = load_workbook('/Users/cmason/Library/Containers/com.microsoft.Excel/Data/Downloads/did_test2.xlsx')
-ws = wb.active
-
-'''FOR DATA TECH TO MODIFY BELOW'''
-# ---------------------------------------------------------------#
-
-'''DAY 1 DRIP CONTROL'''
-day_1_dc1_initial = 11
-day_1_dc1_final = 12
-
-day_1_dc2_initial = 13
-day_1_dc2_final = 14
-
-'''DAY 2 DRIP CONTROL'''
-day_2_dc1_initial = 15
-day_2_dc1_final = 16
-
-day_2_dc2_initial = 17
-day_2_dc2_final = 18
-
-'''DAY 3 DRIP CONTROL'''
-day_3_dc1_initial = 19
-day_3_dc1_final = 20
-
-day_3_dc2_initial = 21
-day_3_dc2_final = 22
-
-'''DAY 4 DRIP CONTROL'''
-day_4_dc1_initial = 23
-day_4_dc1_final = 24
-
-day_4_dc2_initial = 25
-day_4_dc2_final = 26
-
-# -----------------------------------------------------------------#
-
-list2 = [day_1_dc1_initial, day_1_dc1_final, day_1_dc2_initial, day_1_dc2_final, day_2_dc1_initial, day_2_dc1_final,
-         day_2_dc2_initial, day_2_dc2_final, day_3_dc1_initial, day_3_dc1_final, day_3_dc2_initial, day_3_dc2_final,
-         day_4_dc1_initial, day_4_dc1_final, day_4_dc2_initial, day_4_dc2_final]
-
-
-
+# df = pd.read_excel('/Users/cmason/Library/Containers/com.microsoft.Excel/Data/Downloads/did_test3.xlsx')
+# wb = load_workbook('/Users/cmason/Library/Containers/com.microsoft.Excel/Data/Downloads/did_test2.xlsx')
+# ws = wb.active
+#
+# '''FOR DATA TECH TO MODIFY BELOW'''
+# # ---------------------------------------------------------------#
+#
+# '''DAY 1 DRIP CONTROL'''
+# day_1_dc1_initial = 11
+# day_1_dc1_final = 12
+#
+# day_1_dc2_initial = 13
+# day_1_dc2_final = 14
+#
+# '''DAY 2 DRIP CONTROL'''
+# day_2_dc1_initial = 15
+# day_2_dc1_final = 16
+#
+# day_2_dc2_initial = 17
+# day_2_dc2_final = 18
+#
+# '''DAY 3 DRIP CONTROL'''
+# day_3_dc1_initial = 19
+# day_3_dc1_final = 20
+#
+# day_3_dc2_initial = 21
+# day_3_dc2_final = 22
+#
+# '''DAY 4 DRIP CONTROL'''
+# day_4_dc1_initial = 23
+# day_4_dc1_final = 24
+#
+# day_4_dc2_initial = 25
+# day_4_dc2_final = 26
+#
+# # -----------------------------------------------------------------#
+#
+# list2 = [day_1_dc1_initial, day_1_dc1_final, day_1_dc2_initial, day_1_dc2_final, day_2_dc1_initial, day_2_dc1_final,
+#          day_2_dc2_initial, day_2_dc2_final, day_3_dc1_initial, day_3_dc1_final, day_3_dc2_initial, day_3_dc2_final,
+#          day_4_dc1_initial, day_4_dc1_final, day_4_dc2_initial, day_4_dc2_final]
+#
+#
+#
 
 
 
@@ -55,20 +55,28 @@ class Mouse:
 
     @staticmethod
     def data_dict():
-        empty_dict = dict.fromkeys(['NUMBER', 'WEIGHT', 'D1VI', 'D1VF', 'D2VI', 'D2VF', 'D3VI', 'D3VF', 'D4VI', 'D4VF'])
+        mouse_data = dict.fromkeys(['NUMBER', 'WEIGHT', 'D1VI', 'D1VF', 'D2VI', 'D2VF', 'D3VI', 'D3VF', 'D4VI', 'D4VF'])
+        meta_data = dict.fromkeys(['diff_v_day1','diff_v_day2','diff_v_day3','diff_v_day4', 'avg_day_change', 'avg_day_change_wgt'])
         print("The Mouse House of DID(TM) only accepts numbers.")
 
-        for key in empty_dict.keys():
+        for key in mouse_data.keys():
             while True:
                 try:
-                    empty_dict[key] = float(input("What is the value of " + key + "?"))
+                    mouse_data[key] = float(input("What is the value of " + key + "?"))
                 except ValueError:
                     print('Please enter a valid number.')
                     continue
                 else:
                     break
-        mouse_data = empty_dict
-        return mouse_data
+
+        meta_data['diff_v_day1'] = mouse_data['D1VF'] - mouse_data['D1VI']
+        meta_data['diff_v_day2'] = mouse_data['D2VF'] - mouse_data['D2VI']
+        meta_data['diff_v_day3'] = mouse_data['D3VF'] - mouse_data['D3VI']  # no drip
+        meta_data['diff_v_day4'] = mouse_data['D4VF'] - mouse_data['D4VI']
+        meta_data['avg_day_change'] = (meta_data['diff_v_day1'] + meta_data['diff_v_day2'] + meta_data['diff_v_day3'] + meta_data['diff_v_day4']) / 4  # no drip
+        meta_data['avg_day_change_wgt'] = meta_data['avg_day_change'] / mouse_data['WEIGHT'] # no drip
+        data = mouse_data.update(meta_data)
+        return data
 
 
 # test_dict = {'aghf':1,'b':2,'c':3,'d':4,'e':5,'f':6,'g':7,'h':8,'i':9,'j':10,'k':11,'l':12,'m':13,
@@ -86,6 +94,8 @@ while choice != -1:
           "\nEnter the corresponding "
           "number to the task that you would like to do and enter -1 to quit this program")
     print("1- Would you like to enter data on a new mouse?")
+    #TODO: below function
+    print("2 - Would you like to change your drip control constants?")
     # print("2- Would you like to delete a mouse?") #by number so conditional check on number
     # print("3- Would you like to export the Mouse House of Data(TM) to a .csv?")
     # print("4- Would you like to enter Nightmare mode?")
@@ -95,51 +105,48 @@ while choice != -1:
     print(" ")
 
     if choice == 1:
-
-        # ws.append(test_dict)
-
-        mr_mouse = Mouse.data_dict()
-        list1 = list(mr_mouse.values())
-
-        # list 2 stuff
-        diff_v_day1 = mr_mouse.get('D1VF') - mr_mouse.get('D1VI')
-        diff_v_day2 = mr_mouse.get('D2VF') - mr_mouse.get('D2VI')
-        diff_v_day3 = mr_mouse.get('D3VF') - mr_mouse.get('D3VI')
-        diff_v_day4 = mr_mouse.get('D4VF') - mr_mouse.get('D4VI')
-        diff_dc1_day1 = day_1_dc1_final - day_1_dc1_initial
-        diff_dc2_day1 = day_1_dc2_final - day_1_dc2_initial
-        diff_dc1_day2 = day_2_dc1_final - day_2_dc1_initial
-        diff_dc2_day2 = day_2_dc2_final - day_2_dc2_initial
-        diff_dc1_day3 = day_3_dc1_final - day_3_dc1_initial
-        diff_dc2_day3 = day_3_dc2_final - day_3_dc2_initial
-        diff_dc1_day4 = day_4_dc1_final - day_4_dc1_initial
-        diff_dc2_day4 = day_4_dc2_final - day_4_dc2_initial
-
-        list3 = [diff_v_day1, diff_v_day2, diff_v_day3, diff_v_day4, diff_dc1_day1, diff_dc2_day1, diff_dc1_day2,
-                 diff_dc2_day2, diff_dc1_day3, diff_dc2_day3, diff_dc1_day4, diff_dc2_day4]
-
-        # list 3 stuff
-        true_change_d1 = diff_v_day1 + ((diff_dc1_day1 + diff_dc2_day1)/2)
-        true_change_d2 = diff_v_day2 + ((diff_dc1_day2 + diff_dc2_day2)/2)
-        true_change_d3 = diff_v_day3 + ((diff_dc1_day3 + diff_dc2_day3)/2)
-        true_change_d4 = diff_v_day4 + ((diff_dc1_day4 + diff_dc2_day4)/2)
-        avg_day_change = (diff_v_day1 + diff_v_day2 + diff_v_day3 + diff_v_day4)/4
-        avg_day_change_wgt = avg_day_change/mr_mouse.get('WEIGHT')
-        avg_dc_across_days = (diff_dc1_day1 + diff_dc2_day2 + diff_dc1_day3 + diff_dc1_day4 + diff_dc2_day1 +
-                              diff_dc2_day2 + diff_dc2_day3 + diff_dc2_day4)/8
-        avg_day_change_wgt_and_dc = (avg_day_change - avg_dc_across_days)/mr_mouse.get('WEIGHT')
-
-        list4 = [true_change_d1, true_change_d2, true_change_d3, true_change_d4, avg_day_change_wgt,
-                 avg_day_change_wgt_and_dc]
-
-        z = list1 + list2 + list3 + list4
-        ws.append(z)
-        wb.save('/Users/cmason/Library/Containers/com.microsoft.Excel/Data/Downloads/did_test2.xlsx')
-
-    else:
-        print("pick a number")
-
-
-
-
-
+        house = []
+        # data = Mouse.data_dict()
+        house.append(Mouse(Mouse.data_dict()))
+        print(house)
+    #
+    #     # ws.append(test_dict)
+    #
+    #     mr_mouse = Mouse.data_dict()
+    #     list1 = list(mr_mouse.values())
+    #
+    #     diff_dc1_day1 = day_1_dc1_final - day_1_dc1_initial
+    #     diff_dc2_day1 = day_1_dc2_final - day_1_dc2_initial
+    #     diff_dc1_day2 = day_2_dc1_final - day_2_dc1_initial
+    #     diff_dc2_day2 = day_2_dc2_final - day_2_dc2_initial
+    #     diff_dc1_day3 = day_3_dc1_final - day_3_dc1_initial
+    #     diff_dc2_day3 = day_3_dc2_final - day_3_dc2_initial
+    #     diff_dc1_day4 = day_4_dc1_final - day_4_dc1_initial
+    #     diff_dc2_day4 = day_4_dc2_final - day_4_dc2_initial
+    #
+    #     list3 = [diff_v_day1, diff_v_day2, diff_v_day3, diff_v_day4, diff_dc1_day1, diff_dc2_day1, diff_dc1_day2,
+    #              diff_dc2_day2, diff_dc1_day3, diff_dc2_day3, diff_dc1_day4, diff_dc2_day4]
+    #
+    #     # list 3 stuff
+    #     true_change_d1 = diff_v_day1 + ((diff_dc1_day1 + diff_dc2_day1)/2)
+    #     true_change_d2 = diff_v_day2 + ((diff_dc1_day2 + diff_dc2_day2)/2)
+    #     true_change_d3 = diff_v_day3 + ((diff_dc1_day3 + diff_dc2_day3)/2)
+    #     true_change_d4 = diff_v_day4 + ((diff_dc1_day4 + diff_dc2_day4)/2)
+    #     avg_dc_across_days = (diff_dc1_day1 + diff_dc2_day2 + diff_dc1_day3 + diff_dc1_day4 + diff_dc2_day1 +
+    #                           diff_dc2_day2 + diff_dc2_day3 + diff_dc2_day4)/8
+    #     avg_day_change_wgt_and_dc = (avg_day_change - avg_dc_across_days)/mr_mouse.get('WEIGHT')
+    #
+    #     list4 = [true_change_d1, true_change_d2, true_change_d3, true_change_d4, avg_day_change_wgt,
+    #              avg_day_change_wgt_and_dc]
+    #
+    #     z = list1 + list2 + list3 + list4
+    #     ws.append(z)
+    #     wb.save('/Users/cmason/Library/Containers/com.microsoft.Excel/Data/Downloads/did_test2.xlsx')
+    #
+    # else:
+    #     print("pick a number")
+    #
+    #
+    #
+    #
+    #
